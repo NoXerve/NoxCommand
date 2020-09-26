@@ -1,0 +1,11 @@
+{
+  "service_name": "NoxCommand",
+
+  "service_display_name": "NoxCommand",
+
+  "service_id": "org.noxerve.noxcommand",
+
+  "service_description": "A simple service lets you execute command on specific worker. Can be used as a deploy tool.",
+
+  "service_version": "0.0.0"
+}
