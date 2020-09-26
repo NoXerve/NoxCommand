@@ -1,0 +1,13 @@
+{
+    "settings": {
+        "interfaces_connect_settings": [{
+            "interface_name": "WebSocket",
+            "interface_connect_settings": {
+                "host": "0.0.0.0",
+                "port": 12345
+            }
+        }],
+        "worker_authentication_token": "NoxFileTest",
+        "interfaces": "faceee"
+    }
+}
