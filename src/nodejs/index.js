@@ -75,7 +75,7 @@ NoxCommand.prototype.close = function() {
 
 // version
 NoxCommand.prototype.version = function() {
-    console.log(Manifest.service_version);
+    console.log('version: ' + Manifest.service_version);
 }
 
 module.exports = NoxCommand;

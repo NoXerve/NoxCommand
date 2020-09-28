@@ -13,62 +13,66 @@ const FS = require('fs');
 const Constants = require('./constants.json');
 
 module.exports.isMyWorkerFilesInitailized = function() {
-  return FS.existsSync(Constants.NoxCommand_my_worker_initailized_locker_path);
+  return FS.existsSync(process.cwd() + '/' + Constants.noxcommand_my_worker_initailized_locker_path);
 }
 
 module.exports.initailizeMyWorkerFiles = function(noxerve_agent, preloader_parameters, callback) {
-  const worker_peers_settings_initialize = (next) => {
-    if ( !module.exports.isMyWorkerFilesInitailized()) {
-      const readline = require("readline");
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        // terminal: false
-      });
+    const worker_peers_settings_initialize = (next) => {
+        if ( !module.exports.isMyWorkerFilesInitailized()) {
+            const readline = require("readline");
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout,
+                // terminal: false
+            });
 
-      console.log('Has not set up worker peer settings.');
-      rl.question('Do you want to:\n 1. Setup as the first worker.\n 2. Join other worker peers? \nInput a number: \n', (answer) => {
-        rl.close();
-        if (answer === '1') {
-          FS.writeFileSync(Constants.noxcommand_static_global_random_seed_4096bytes_path, Crypto.randomBytes(4096));
-          console.log('Created static global random seed file at "' + Constants.noxcommand_static_global_random_seed_4096bytes_path + '".');
+            console.log('Has not set up worker peer settings.');
+            rl.question('Do you want to:\n 1. Setup as the first worker.\n 2. Join other worker peers? \nInput a number: \n', (answer) => {
+                rl.close();
+                if (answer === '1') {
 
-          FS.writeFileSync(Constants.noxcommand_my_worker_settings_path, JSON.stringify({
-            worker_id: 1,
-            interfaces: preloader_parameters.settings.interfaces,
-            interfaces_connect_settings: preloader_parameters.settings.interfaces_connect_settings,
-          }, null, 2));
-          console.log('Created my worker settings file at "' + Constants.noxcommand_my_worker_settings_path + '".');
+                    FS.writeFileSync(Constants.noxcommand_static_global_random_seed_4096bytes_path, Crypto.randomBytes(4096));
+                    console.log('Created static global random seed file at "' + Constants.noxcommand_static_global_random_seed_4096bytes_path + '".');
 
-          FS.writeFileSync(Constants.noxcommand_worker_peers_settings_path, JSON.stringify({
-            1: {
-              interfaces_connect_settings: preloader_parameters.settings.interfaces_connect_settings,
-              detail: {
-                name: 'The first noxcommand service worker.'
-              }
-            }
-          }, null, 2));
-          console.log('Created worker peers settings file at "' + Constants.noxcommand_worker_peers_settings_path + '".');
-          next(false);
-        } else if (answer === '2') {
-            // setup my_worker_settings
-            // connect to a worker
-            // get worker_peers_settings from that worker
-            //
+                    FS.writeFileSync(Constants.noxcommand_my_worker_settings_path, JSON.stringify({
+                        worker_id: 1,
+                        interfaces: preloader_parameters.settings.interfaces,
+                        interfaces_connect_settings: preloader_parameters.settings.interfaces_connect_settings,
+                    }, null, 2));
+                    console.log('Created my worker settings file at "' + Constants.noxcommand_my_worker_settings_path + '".');
+
+                    FS.writeFileSync(Constants.noxcommand_worker_peers_settings_path, JSON.stringify({
+                        1: {
+                            interfaces_connect_settings: preloader_parameters.settings.interfaces_connect_settings,
+                            detail: {
+                                name: 'The first noxcommand service worker.'
+                            }
+                        }
+                    }, null, 2));
+                    console.log('Created worker peers settings file at "' + Constants.noxcommand_worker_peers_settings_path + '".');
+                    next(false);
+                } else if (answer === '2') {
+                    // setup my_worker_settings
+
+
+                    // connect to a worker
+
+                    // get worker_peers_settings from that worker
+                    //
+                }
+            });
+        } else {
+            next(false);
         }
-      });
-    } else {
-      next(false);
-    }
-  };
+    };
 
-  worker_peers_settings_initialize((error) => {
-    if (error) callback(error);
-    else {
-      FS.writeFileSync(Constants.noxcommand_my_worker_initailized_locker_path, '');
-      callback(false);
-    }
-  });
+    worker_peers_settings_initialize((error) => {
+        if (error) callback(error);
+        else {
+            FS.writeFileSync(Constants.noxcommand_my_worker_initailized_locker_path, '');
+            callback(false);
+        }
+    });
 }
 
 module.exports.initailizeNoXerveAgentWorker = function(noxerve_agent, preloader_parameters, callback) {
@@ -83,7 +87,7 @@ module.exports.initailizeNoXerveAgentWorker = function(noxerve_agent, preloader_
 
         if (worker_authenticity_information.worker_authentication_token === preloader_parameters.settings.worker_authentication_token) {
             is_valid(true);
-        } 
+        }
         else {
             is_valid(false);
         }

@@ -21,7 +21,7 @@ const test_indexs = {
   1: 'join worker 3',
   2: 'update worker 3',
   3: 'leave worker 3',
-  4: 'worker 1 execute commanf on worker 3',
+  4: 'worker 1 execute command on worker 3',
 };
 
 let worker_ready_left = Object.keys(worker_indexs).length;
