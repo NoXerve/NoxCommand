@@ -11,6 +11,7 @@
 const Crypto = require('crypto');
 const FS = require('fs');
 const Constants = require('./constants.json');
+const JoinHelper = require('./JoinHelper');
 
 module.exports.isMyWorkerFilesInitailized = function() {
   return FS.existsSync(process.cwd() + '/' + Constants.noxcommand_my_worker_initailized_locker_path);
@@ -53,9 +54,15 @@ module.exports.initailizeMyWorkerFiles = function(noxerve_agent, preloader_param
                     next(false);
                 } else if (answer === '2') {
                     // setup my_worker_settings
-
+                    FS.writeFileSync(Constants.noxcommand_my_worker_settings_path, JSON.stringify({
+                        worker_id: 0, // 0 means undefined
+                        interfaces: preloader_parameters.settings.interfaces,
+                        interfaces_connect_settings: preloader_parameters.settings.interfaces_connect_settings,
+                    }, null, 2));
+                    console.log('Created my worker settings file at "' + Constants.noxcommand_my_worker_settings_path + '".');
 
                     // connect to a worker
+                    let my_worker_setting = FS.readFileSync(Constants.noxcommand_my_worker_settings_path)
 
                     // get worker_peers_settings from that worker
                     //
